@@ -39,9 +39,10 @@ class Slingshot {
         })
 
         this.canvasDOM.addEventListener('mouseup', e => {
-            this.isDown ? this.bombs.push(new Bomb(this.ctx, this.canvasDOM, this.canvasSize, {x: Math.floor((this.pointerPosition.x - this.slingCenter.x) * -1 / 3), y: Math.floor((this.pointerPosition.y - this.slingCenter.y) * -1 / 3)}, this.slingCenter)) : null
+            if (this.isDown && this.pointerPosition.y > this.position.y + this.size.h) {
+                this.bombs.push(new Bomb(this.ctx, this.canvasDOM, this.canvasSize, { x: Math.floor((this.pointerPosition.x - this.slingCenter.x) * -1 / 3), y: Math.floor((this.pointerPosition.y - this.slingCenter.y) * -1 / 3) }, this.slingCenter))
+            }
             this.isDown = false
-
         })
     }
 }

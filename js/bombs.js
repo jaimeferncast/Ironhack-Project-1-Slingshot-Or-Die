@@ -3,9 +3,9 @@ class Bomb {
         this.ctx = ctx
         this.canvasDOM = canvasDom
         this.canvasSize = canvasSize
-        this.speed = { x: speed.x, y: speed.y}
-        this.position = { x: position.x, y: position.y}
-        this.size = { w: 5, h: 5 }
+        this.speed = { x: speed.x, y: speed.y }
+        this.position = { x: position.x, y: position.y }
+        this.size = { w: 30, h: 30 }
     }
     draw() {
         this.move()

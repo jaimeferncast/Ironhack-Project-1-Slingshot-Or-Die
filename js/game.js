@@ -13,8 +13,11 @@ const appGame = {
     },
     slingShot: undefined,
     enemies: [],
-    // bombs: [],
+    enemiesFrequency: 50,
+    innocents: [],
     frames: 0,
+    score: 0,
+    record: 0,
     init(id) {
         this.canvasDOM = document.getElementById('mycanvas')
         this.ctx = this.canvasDOM.getContext('2d')
@@ -27,36 +30,6 @@ const appGame = {
         this.slingShot.setEventListeners()
 
     },
-    // setEventListeners() {
-    //     let isDown = false
-    //     let slingCenter = {
-    //         x: this.slingShot.position.x + this.slingShot.size.w / 2,
-    //         y: this.slingShot.position.y + this.slingShot.size.h / 2
-    //     }
-    //     let pointerPosition = { x: undefined, y: undefined }
-
-    //     this.canvasDOM.addEventListener('mousedown', e => {
-    //         this.slingShot.position.x + this.slingShot.size.w > e.offsetX && e.offsetX > this.slingShot.position.x && this.slingShot.position.y + this.slingShot.size.h > e.offsetY && e.offsetY > this.slingShot.position.y ? isDown = true : null
-    //     })
-
-    //     this.canvasDOM.addEventListener('mousemove', e => {
-    //         pointerPosition.x = e.offsetX
-    //         pointerPosition.y = e.offsetY
-    //         if (isDown && pointerPosition.y > slingCenter.y) {
-    //             this.ctx.beginPath()
-    //             this.ctx.strokeStyle = 'black'
-    //             this.ctx.lineWidth = 1
-    //             this.ctx.moveTo(slingCenter.x, slingCenter.y)
-    //             this.ctx.lineTo(pointerPosition.x, pointerPosition.y)
-    //             this.ctx.stroke()
-    //             this.ctx.closePath()
-    //         }
-    //     })
-
-    //     this.canvasDOM.addEventListener('mouseup', e => {
-    //         isDown = false
-    //     })
-    // },
     setDimensions() {
         this.canvasSize = {
             w: 900,
@@ -68,13 +41,31 @@ const appGame = {
     drawAll() {
         setInterval(() => {
             this.clearScreen()
+            this.ctx.fillText(`Your Score is ${this.score}`, 100, this.canvasSize.h - 100)
             this.frames++
             this.slingShot.draw()
             this.enemies.forEach(elm => {
                 elm.draw()
             })
-            this.frames % 50 === 0 ? this.createEnemies() : null
-            this.frames % 50 === 0 ? this.clearEnemy() : null
+            this.innocents.forEach(elm => {
+                elm.draw()
+            })
+            this.frames % 200 === 0 ? this.createInnocent() : null
+            if (this.frames % 50 === 0) {
+                if (this.enemiesFrequency === 0) {
+                    this.enemiesFrequency = 50
+                }
+                else {
+                    this.enemiesFrequency--
+                }
+            }
+            this.frames % this.enemiesFrequency === 0 ? this.createEnemies() : null
+            if (this.frames % 50 === 0) {
+                this.clearEnemy()
+                this.clearBombs()
+            }
+            this.isEnemyCollision()
+            this.isInnocentCollision()
         }, 70)
     },
     clearScreen() {
@@ -86,12 +77,52 @@ const appGame = {
     createEnemies() {
         this.enemies.push(new Enemy(this.ctx, this.canvasSize))
     },
-    // createBombs() {
-    //     this.bombs.push(new Bomb(this.ctx, this.canvasDOM, this.canvasSize, {x: 5, y: 5}, this.slingShot.slingCenter))
-    // },
+    createInnocent() {
+        this.innocents.push(new Innocent(this.ctx, this.canvasSize))
+    },
     clearEnemy() {
         this.enemies.forEach((elm, i) => {
             elm.position.y > this.canvasSize.h ? this.enemies.splice(i, 1) : null
+        })
+    },
+    clearInnocent() {
+        this.innocents.forEach((elm, i) => {
+            elm.position.y > this.canvasSize.h ? this.innocents.splice(i, 1) : null
+        })
+    },
+    clearBombs() {
+        this.slingShot.bombs.forEach((elm, i) => {
+            elm.position.x < 0 || elm.position.x > this.canvasSize.w || elm.position.y < 0 ? this.slingShot.bombs.splice(i, 1) : null
+        })
+    },
+    isEnemyCollision() {
+        this.slingShot.bombs.forEach((elm, i) => {
+            let eachBomb = elm
+            let eachBombIndex = i
+            this.enemies.forEach((eachEnemy, eachEnemyIndex) => {
+                if (
+                    eachEnemy.position.x + eachEnemy.size.w > eachBomb.position.x && eachEnemy.position.x < eachBomb.position.x + eachBomb.size.w && eachEnemy.position.y + eachEnemy.size.h > eachBomb.position.y && eachEnemy.position.y < eachBomb.position.y + eachBomb.size.h
+                ) {
+                    this.enemies.splice(eachEnemyIndex, 1)
+                    this.slingShot.bombs.splice(eachBombIndex, 1)
+                    this.score++
+                }
+            })
+        })
+    },
+    isInnocentCollision() {
+        this.slingShot.bombs.forEach((elm, i) => {
+            let eachBomb = elm
+            let eachBombIndex = i
+            this.innocents.forEach((eachInnocent, eachInnocentIndex) => {
+                if (
+                    eachInnocent.position.x + eachInnocent.size.w > eachBomb.position.x && eachInnocent.position.x < eachBomb.position.x + eachBomb.size.w && eachInnocent.position.y + eachInnocent.size.h > eachBomb.position.y && eachInnocent.position.y < eachBomb.position.y + eachBomb.size.h
+                ) {
+                    this.innocents.splice(eachInnocentIndex, 1)
+                    this.slingShot.bombs.splice(eachBombIndex, 1)
+                    this.score--
+                }
+            })
         })
     }
 }
