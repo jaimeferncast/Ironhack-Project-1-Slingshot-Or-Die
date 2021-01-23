@@ -2,7 +2,7 @@ class Enemy {
     constructor(ctx, canvasSize) {
         this.ctx = ctx
         this.canvasSize = canvasSize
-        this.size = { w: 5, h: 5 }
+        this.size = { w: 10, h: 10 }
         this.position = { x: this.randomPosX(), y: 0 - this.randomPosY() }
         this.speed = 2 + this.randomSpeed()
         // this.imageName = ''
