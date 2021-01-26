@@ -14,7 +14,7 @@ const appGame = {
     slingShot: undefined,
     characters: [],
     explosions: [],
-    enemiesFrequency: 50,
+    enemiesFrequency: 100,
     frames: 0,
     score: 0,
     record: 0,
@@ -44,10 +44,10 @@ const appGame = {
             this.clearScreen()
             this.drawAll()
             this.animateAll()
-            this.frames % 200 === 0 ? this.createInnocent() : null
-            if (this.frames % 50 === 0) {
-                if (this.enemiesFrequency === 15) {
-                    this.enemiesFrequency = 50
+            this.frames % 400 === 0 ? this.createInnocent() : null
+            if (this.frames % 100 === 0) {
+                if (this.enemiesFrequency === 20) {
+                    this.enemiesFrequency = 100
                 }
                 else { this.enemiesFrequency-- }
             }
@@ -82,10 +82,10 @@ const appGame = {
         this.slingShot = new Slingshot(this.ctx, this.canvasDOM, this.canvasSize, this.canvasSize.w / 2 - 25, this.canvasSize.h - 200, 100, 100, this.lives)
     },
     createEnemies() {
-        this.characters.push(new Character(this.ctx, this.canvasSize, 'enemy', 40))
+        this.characters.push(new Character(this.ctx, this.canvasSize, 'enemy', 20))
     },
     createInnocent() {
-        this.characters.push(new Character(this.ctx, this.canvasSize, 'innocent', 40))
+        this.characters.push(new Character(this.ctx, this.canvasSize, 'innocent', 20))
     },
     clearCharacter() {
         this.characters.forEach((elm, i) => {

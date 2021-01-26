@@ -48,7 +48,7 @@ class Character {
         return Math.floor(Math.random() * (this.canvasSize.w - this.radius * 2))
     }
     randomPosY() {
-        return Math.floor(Math.random() * 100)
+        return Math.floor(Math.random() * 50)
     }
     randomSpeed() {
         if (this.character === 'enemy') {

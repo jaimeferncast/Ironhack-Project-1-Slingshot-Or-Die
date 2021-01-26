@@ -34,7 +34,6 @@ class Slingshot {
 
         this.canvasDOM.addEventListener('mousedown', e => {
             this.lives > 0 && this.position.x + this.size.w > e.offsetX && e.offsetX > this.position.x && this.position.y + this.size.h > e.offsetY && e.offsetY > this.position.y ? this.isDown = true : null
-            console.log(this.lives)
         })
 
         this.canvasDOM.addEventListener('mousemove', e => {
