@@ -40,8 +40,8 @@ class Slingshot {
             this.pointerPosition.x = e.offsetX
             this.pointerPosition.y = e.offsetY
             this.landingPos = {
-                x: this.slingCenter.x - (this.pointerPosition.x - this.slingCenter.x) * 4,
-                y: this.slingCenter.y - (this.pointerPosition.y - this.slingCenter.y) * 4
+                x: this.slingCenter.x - (this.pointerPosition.x - this.slingCenter.x) * 6,
+                y: this.slingCenter.y - (this.pointerPosition.y - this.slingCenter.y) * 6
             }
             if (this.isDown && this.pointerPosition.y > this.slingCenter.y) {
                 this.ctx.beginPath()
@@ -67,7 +67,7 @@ class Slingshot {
                     this.ctx,
                     this.canvasDOM,
                     this.canvasSize,
-                    { x: Math.floor((this.pointerPosition.x - this.slingCenter.x) * -1 / 5), y: Math.floor((this.pointerPosition.y - this.slingCenter.y) * -1 / 5) },
+                    { x: Math.floor((this.pointerPosition.x - this.slingCenter.x) * -1 / 6), y: Math.floor((this.pointerPosition.y - this.slingCenter.y) * -1 / 6) },
                     this.slingCenter,
                     2,
                     this.landingPos

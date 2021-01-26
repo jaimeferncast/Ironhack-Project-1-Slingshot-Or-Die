@@ -10,13 +10,13 @@ class Bomb {
         this.landingPos = landingPos
         this.image = new Image()
         this.image.src = "./img/bomb.png"
-        this.angle = 20
+        this.angle = 0
     }
     draw() {
         this.move()
         this.ctx.save()
         this.ctx.translate(this.position.x, this.position.y)
-        this.ctx.rotate(Math.PI * 2 / this.angle)
+        this.ctx.rotate(this.angle * Math.PI / 180)
         this.ctx.translate(-this.position.x, -this.position.y)
         this.ctx.drawImage(
             this.image,
@@ -28,10 +28,10 @@ class Bomb {
         this.ctx.restore()
     }
     animate() {
-        if (this.angle === 1) {
-            this.angle = 3
+        if (this.angle === 360) {
+            this.angle = 0
         } else {
-            this.angle--
+            this.angle += 10
         }
     }
     move() {
@@ -40,15 +40,15 @@ class Bomb {
     }
     hasBombLanded() {
         if (this.speed.x < 0) {
-            if (this.landingPos.x > this.position.x && this.landingPos.y > this.position.y) {
+            if (this.landingPos.x >= this.position.x || this.landingPos.y >= this.position.y) {
                 return true
             }
         } else if (this.speed.x > 0) {
-            if (this.landingPos.x < this.position.x && this.landingPos.y > this.position.y) {
+            if (this.landingPos.x <= this.position.x || this.landingPos.y >= this.position.y) {
                 return true
             }
         } else {
-            if (this.landingPos.y > this.position.y) {
+            if (this.landingPos.y >= this.position.y) {
                 return true
             }
         }
