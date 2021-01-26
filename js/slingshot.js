@@ -13,6 +13,7 @@ class Slingshot {
         }
         this.pointerPosition = { x: undefined, y: undefined }
         this.bombs = []
+        this.landingPos = undefined
     }
 
     draw() {
@@ -30,6 +31,10 @@ class Slingshot {
         this.canvasDOM.addEventListener('mousemove', e => {
             this.pointerPosition.x = e.offsetX
             this.pointerPosition.y = e.offsetY
+            this.landingPos = {
+                x: this.slingCenter.x - (this.pointerPosition.x - this.slingCenter.x) * 4,
+                y: this.slingCenter.y - (this.pointerPosition.y - this.slingCenter.y) * 4
+            }
             if (this.isDown && this.pointerPosition.y > this.slingCenter.y) {
                 this.ctx.beginPath()
                 this.ctx.strokeStyle = 'black'
@@ -42,10 +47,9 @@ class Slingshot {
 
                 this.ctx.strokeStyle = 'red'
                 this.ctx.beginPath()
-                this.ctx.arc(this.slingCenter.x - (this.pointerPosition.x - this.slingCenter.x) * 4, this.slingCenter.y - (this.pointerPosition.y - this.slingCenter.y) * 4, 30, 0, Math.PI * 2)
+                this.ctx.arc(this.landingPos.x, this.landingPos.y, 30, 0, Math.PI * 2)
                 this.ctx.stroke()
                 this.ctx.closePath()
-                this.ctx.fillStyle = 'white'
             }
         })
 
@@ -58,10 +62,8 @@ class Slingshot {
                     { x: Math.floor((this.pointerPosition.x - this.slingCenter.x) * -1 / 5), y: Math.floor((this.pointerPosition.y - this.slingCenter.y) * -1 / 5) },
                     this.slingCenter,
                     3,
-                    { x: this.pointerPosition.x, y: this.pointerPosition.y },
-                    this.slingCenter
+                    this.landingPos
                 ))
-                console.log(this.bombs[this.bombs.length - 1].speed.x)
             }
             this.isDown = false
         })

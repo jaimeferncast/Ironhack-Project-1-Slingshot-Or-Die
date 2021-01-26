@@ -119,9 +119,8 @@ const appGame = {
     // },
     isCollision() {
         let returnedCharacter = undefined
-        this.explosions.forEach((elm, i) => {
+        this.explosions.forEach(elm => {
             let eachExp = elm
-            let eachExpIndex = i
             this.characters.forEach((eachCharacter, eachCharacterIndex) => {
                 const dx = eachExp.position.x - eachCharacter.position.x
                 const dy = eachExp.position.y - eachCharacter.position.y

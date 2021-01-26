@@ -1,5 +1,5 @@
 class Bomb {
-    constructor(ctx, canvasDom, canvasSize, speed, position, radius, initialPos, slingCenter) {
+    constructor(ctx, canvasDom, canvasSize, speed, position, radius, landingPos) {
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx
         this.canvasDOM = canvasDom
@@ -7,8 +7,7 @@ class Bomb {
         this.speed = { x: speed.x, y: speed.y }
         this.position = { x: position.x, y: position.y }
         this.radius = radius
-        this.pointerPosition = initialPos
-        this.slingCenter = slingCenter
+        this.landingPos = landingPos
     }
     draw() {
         this.move()
@@ -25,11 +24,17 @@ class Bomb {
     }
     hasBombLanded() {
         if (this.speed.x < 0) {
-            if (this.position.x < this.slingCenter.x - (this.pointerPosition.x - this.slingCenter.x) * 4 || this.position.y < this.slingCenter.y - (this.pointerPosition.y - this.slingCenter.y) * 4) { return true }
+            if (this.landingPos.x > this.position.x && this.landingPos.y > this.position.y) {
+                return true
+            }
         } else if (this.speed.x > 0) {
-            if (this.position.x > this.slingCenter.x - (this.pointerPosition.x - this.slingCenter.x) * 4 || this.position.y < this.slingCenter.y - (this.pointerPosition.y - this.slingCenter.y) * 4) { return true }
+            if (this.landingPos.x < this.position.x && this.landingPos.y > this.position.y) {
+                return true
+            }
         } else {
-            if (this.position.y < this.slingCenter.y - (this.pointerPosition.y - this.slingCenter.y) * 4) { return true }
+            if (this.landingPos.y > this.position.y) {
+                return true
+            }
         }
     }
 }
