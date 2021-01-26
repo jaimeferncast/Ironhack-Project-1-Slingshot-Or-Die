@@ -6,7 +6,7 @@ class Character {
         this.radius = radius
         this.position = { x: this.randomPosX() + this.radius, y: 0 - this.randomPosY() - this.radius }
         this.character = character
-        this.speed = 2 + this.randomSpeed()
+        this.speed = 1 + this.randomSpeed()
         this.image = new Image();
         this.image.src = "./img/run.png";
         this.image.frames = 6;
@@ -52,7 +52,7 @@ class Character {
     }
     randomSpeed() {
         if (this.character === 'enemy') {
-            return Math.floor(Math.random() * 5)
+            return Math.floor(Math.random() * 3)
         } else {
             return 0
         }

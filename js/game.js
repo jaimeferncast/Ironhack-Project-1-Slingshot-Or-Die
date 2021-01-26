@@ -25,7 +25,7 @@ const appGame = {
         this.setDimensions()
         this.createSlingshot()
         this.setEventListeners()
-        this.drawAll()
+        this.startGame()
     },
     setEventListeners() {
         this.slingShot.setEventListeners()
@@ -39,14 +39,11 @@ const appGame = {
         this.canvasDOM.setAttribute('width', this.canvasSize.w)
         this.canvasDOM.setAttribute('height', this.canvasSize.h)
     },
-    drawAll() {
+    startGame() {
         this.interval = setInterval(() => {
             this.clearScreen()
-            this.printScore()
-            this.slingShot.draw()
-            this.characters.forEach(elm => {
-                elm.draw(this.frames)
-            })
+            this.drawAll()
+            this.animateAll()
             this.frames % 200 === 0 ? this.createInnocent() : null
             if (this.frames % 50 === 0) {
                 if (this.enemiesFrequency === 15) {
@@ -55,19 +52,34 @@ const appGame = {
                 else { this.enemiesFrequency-- }
             }
             this.frames % this.enemiesFrequency === 0 ? this.createEnemies() : null
-            this.explodeBomb(this.frames)
+            this.explodeBomb()
             this.updateScore(this.isCollision())
             this.isGameOver()
             this.clearCharacter()
             this.clearBombs()
             this.frames > 5000 ? this.frames = 0 : this.frames++
-        }, 70)
+        }, 40)
+    },
+    drawAll() {
+        this.printScore()
+        this.slingShot.draw()
+        this.characters.forEach(elm => {
+            elm.draw(this.frames)
+        })
+    },
+    animateAll() {
+        this.explosions.forEach(elm => {
+            elm.animate()
+        })
+        this.slingShot.bombs.forEach(elm => {
+            elm.animate()
+        })
     },
     clearScreen() {
         this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
     },
     createSlingshot() {
-        this.slingShot = new Slingshot(this.ctx, this.canvasDOM, this.canvasSize, this.canvasSize.w / 2 - 25, this.canvasSize.h - 200, 100, 100)
+        this.slingShot = new Slingshot(this.ctx, this.canvasDOM, this.canvasSize, this.canvasSize.w / 2 - 25, this.canvasSize.h - 200, 100, 100, this.lives)
     },
     createEnemies() {
         this.characters.push(new Character(this.ctx, this.canvasSize, 'enemy', 40))
@@ -88,10 +100,10 @@ const appGame = {
             }
         })
     },
-    explodeBomb(frames) {
+    explodeBomb() {
         this.explosions.forEach((elm, i) => {
-            elm.explode(frames)
-            elm.radius === 160 ? this.explosions.splice(i, 1) : null
+            elm.explode()
+            elm.radius === 84 ? this.explosions.splice(i, 1) : null
         })
     },
     isCollision() {
@@ -116,8 +128,10 @@ const appGame = {
         this.characters.forEach(elm => {
             if (elm.character === 'enemy' && elm.position.y > this.canvasSize.h + elm.radius) {
                 this.lives--
+                this.slingShot.lives--
             } else if (elm.character === 'innocent' && elm.position.y > this.canvasSize.h + elm.radius) {
                 this.lives++
+                this.slingShot.lives++
             }
         })
     },

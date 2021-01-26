@@ -1,5 +1,5 @@
 class Slingshot {
-    constructor(ctx, canvasDom, canvasSize, posX, posY, width, height) {
+    constructor(ctx, canvasDom, canvasSize, posX, posY, width, height, lives) {
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx
         this.canvasDOM = canvasDom
@@ -16,6 +16,7 @@ class Slingshot {
         this.landingPos = undefined
         this.image = new Image()
         this.image.src = "./img/slingshot.png"
+        this.lives = lives
     }
 
     draw() {
@@ -32,7 +33,8 @@ class Slingshot {
     setEventListeners() {
 
         this.canvasDOM.addEventListener('mousedown', e => {
-            this.position.x + this.size.w > e.offsetX && e.offsetX > this.position.x && this.position.y + this.size.h > e.offsetY && e.offsetY > this.position.y ? this.isDown = true : null
+            this.lives > 0 && this.position.x + this.size.w > e.offsetX && e.offsetX > this.position.x && this.position.y + this.size.h > e.offsetY && e.offsetY > this.position.y ? this.isDown = true : null
+            console.log(this.lives)
         })
 
         this.canvasDOM.addEventListener('mousemove', e => {
@@ -68,7 +70,7 @@ class Slingshot {
                     this.canvasSize,
                     { x: Math.floor((this.pointerPosition.x - this.slingCenter.x) * -1 / 5), y: Math.floor((this.pointerPosition.y - this.slingCenter.y) * -1 / 5) },
                     this.slingCenter,
-                    3,
+                    2,
                     this.landingPos
                 ))
             }

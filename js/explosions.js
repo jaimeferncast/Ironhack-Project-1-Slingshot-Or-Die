@@ -4,13 +4,13 @@ class Explosions {
         this.ctx = ctx
         this.position = position
         this.radius = 0
-        this.speed = 40
+        this.speed = 3
         this.image = new Image()
-        this.image.src = "./img/HolyExplosion.png"
+        this.image.src = "./img/firecast.png"
         this.image.frames = 28
         this.image.framesIndex = 0
     }
-    explode(framesCounter) {
+    explode() {
         this.ctx.beginPath()
         this.ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
         // this.ctx.fill()
@@ -23,22 +23,13 @@ class Explosions {
             0,
             Math.floor(this.image.width / this.image.frames),
             this.image.height,
-            this.position.x - 160,
-            this.position.y - 160,
-            160 * 2,
-            160 * 2
+            this.position.x - 100,
+            this.position.y - 100,
+            100 * 2,
+            100 * 2
         )
-
-        this.animate(framesCounter)
     }
-
-    animate(framesCounter) {
-        console.log(framesCounter)
-        if (framesCounter % 40 == 0) {
-            this.image.framesIndex++
-        }
-        // if (this.image.framesIndex >= this.image.frames) {
-        //     this.image.framesIndex = 0
-        // }
+    animate() {
+        this.image.framesIndex++
     }
 }
