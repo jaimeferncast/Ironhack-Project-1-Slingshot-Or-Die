@@ -14,11 +14,18 @@ class Slingshot {
         this.pointerPosition = { x: undefined, y: undefined }
         this.bombs = []
         this.landingPos = undefined
+        this.image = new Image()
+        this.image.src = "./img/slingshot.png"
     }
 
     draw() {
-        this.ctx.fillStyle = 'white'
-        this.ctx.fillRect(this.position.x, this.position.y, this.size.w, this.size.h)
+        this.ctx.drawImage(
+            this.image,
+            this.position.x,
+            this.position.y,
+            this.size.w,
+            this.size.h,
+        )
         this.bombs.forEach(elm => elm.draw())
     }
 
@@ -39,9 +46,9 @@ class Slingshot {
                 this.ctx.beginPath()
                 this.ctx.strokeStyle = 'black'
                 this.ctx.lineWidth = 1
-                this.ctx.moveTo(this.slingCenter.x - this.size.w / 2, this.slingCenter.y)
+                this.ctx.moveTo(this.slingCenter.x - this.size.w / 2 + 16, this.slingCenter.y - 37)
                 this.ctx.lineTo(this.pointerPosition.x, this.pointerPosition.y)
-                this.ctx.lineTo(this.slingCenter.x + this.size.w / 2, this.slingCenter.y)
+                this.ctx.lineTo(this.slingCenter.x + this.size.w / 2 - 27, this.slingCenter.y - 37)
                 this.ctx.stroke()
                 this.ctx.closePath()
 

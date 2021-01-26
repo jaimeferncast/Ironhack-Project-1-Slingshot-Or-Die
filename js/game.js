@@ -43,10 +43,9 @@ const appGame = {
         this.interval = setInterval(() => {
             this.clearScreen()
             this.printScore()
-            this.frames++
             this.slingShot.draw()
             this.characters.forEach(elm => {
-                elm.draw()
+                elm.draw(this.frames)
             })
             this.frames % 200 === 0 ? this.createInnocent() : null
             if (this.frames % 50 === 0) {
@@ -56,35 +55,31 @@ const appGame = {
                 else { this.enemiesFrequency-- }
             }
             this.frames % this.enemiesFrequency === 0 ? this.createEnemies() : null
-            this.explodeBomb()
+            this.explodeBomb(this.frames)
             this.updateScore(this.isCollision())
             this.isGameOver()
             this.clearCharacter()
             this.clearBombs()
+            this.frames > 5000 ? this.frames = 0 : this.frames++
         }, 70)
     },
     clearScreen() {
         this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
     },
     createSlingshot() {
-        this.slingShot = new Slingshot(this.ctx, this.canvasDOM, this.canvasSize, this.canvasSize.w / 2 - 25, this.canvasSize.h - 200, 50, 50)
+        this.slingShot = new Slingshot(this.ctx, this.canvasDOM, this.canvasSize, this.canvasSize.w / 2 - 25, this.canvasSize.h - 200, 100, 100)
     },
     createEnemies() {
-        this.characters.push(new Character(this.ctx, this.canvasSize, 'enemy', 20))
+        this.characters.push(new Character(this.ctx, this.canvasSize, 'enemy', 40))
     },
     createInnocent() {
-        this.characters.push(new Character(this.ctx, this.canvasSize, 'innocent', 20))
+        this.characters.push(new Character(this.ctx, this.canvasSize, 'innocent', 40))
     },
     clearCharacter() {
         this.characters.forEach((elm, i) => {
             elm.position.y > this.canvasSize.h + elm.radius ? this.characters.splice(i, 1) : null
         })
     },
-    // clearBombs() {
-    //     this.slingShot.bombs.forEach((elm, i) => {
-    //         elm.position.x < 0 || elm.position.x > this.canvasSize.w || elm.position.y < 0 ? this.slingShot.bombs.splice(i, 1) : null
-    //     })
-    // },
     clearBombs() {
         this.slingShot.bombs.forEach((elm, i) => {
             if (elm.hasBombLanded()) {
@@ -93,30 +88,12 @@ const appGame = {
             }
         })
     },
-    explodeBomb() {
+    explodeBomb(frames) {
         this.explosions.forEach((elm, i) => {
-            elm.explode()
+            elm.explode(frames)
             elm.radius === 160 ? this.explosions.splice(i, 1) : null
         })
     },
-    // isCollision() {
-    //     let returnedCharacter = undefined
-    //     this.slingShot.bombs.forEach((elm, i) => {
-    //         let eachBomb = elm
-    //         let eachBombIndex = i
-    //         this.characters.forEach((eachCharacter, eachCharacterIndex) => {
-    //             const dx = eachBomb.position.x - eachCharacter.position.x
-    //             const dy = eachBomb.position.y - eachCharacter.position.y
-    //             let distance = Math.sqrt(dx * dx + dy * dy)
-    //             if (distance < eachBomb.radius + eachCharacter.radius) {
-    //                 returnedCharacter = eachCharacter.character
-    //                 this.characters.splice(eachCharacterIndex, 1)
-    //                 this.slingShot.bombs.splice(eachBombIndex, 1)
-    //             }
-    //         })
-    //     })
-    //     return returnedCharacter
-    // },
     isCollision() {
         let returnedCharacter = undefined
         this.explosions.forEach(elm => {
