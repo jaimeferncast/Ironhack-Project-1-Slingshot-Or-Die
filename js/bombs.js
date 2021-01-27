@@ -28,11 +28,7 @@ class Bomb {
         this.ctx.restore()
     }
     animate() {
-        if (this.angle === 360) {
-            this.angle = 0
-        } else {
-            this.angle += 10
-        }
+        this.angle === 360 ? this.angle = 0 : this.angle += 10
     }
     move() {
         this.position.y += this.speed.y
