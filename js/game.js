@@ -12,10 +12,11 @@ const appGame = {
         h: undefined
     },
     slingShot: undefined,
+    wave: 1,
     characters: [],
     explosions: [],
     isCollisionDistance: undefined,
-    enemiesFrequency: 0,
+    enemiesFrequency: 100,
     frames: 0,
     score: 0,
     record: 0,
@@ -42,11 +43,11 @@ const appGame = {
     },
     startGame() {
         this.interval = setInterval(() => {
-            this.frames > 5000 ? this.frames = 0 : this.frames++
+            this.frames > 5000 ? this.frames = 1 : this.frames++
             this.clearScreen()
+            this.createWave()
             this.drawAll()
             this.animateAll()
-            this.createWaves()
             this.explodeBomb()
             this.updateScore(this.isCollision())
             this.isGameOver()
@@ -78,42 +79,46 @@ const appGame = {
         boardImage.src = "./img/background.jpg"
         this.ctx.drawImage(boardImage, -50, 0, this.canvasSize.w + 100, this.canvasSize.h + 200)
     },
-    createWaves() {
-        this.frames === 1 && this.firstWave()
-        // console.log(this.firstWave())
+    createWave() {
+        this.wave === 1 && this.firstWave()
+        this.wave === 2 && this.secondWave()
+        this.wave === 3 && this.thirdWave()
     },
     firstWave() {
-        this.enemiesFrequency = 100
-
-        if (this.frames % this.enemiesFrequency === 0) {
-            this.enemiesFrequency === 40 ? this.enemiesFrequency = undefined : this.enemiesFrequency--
+        if (!(this.frames % this.enemiesFrequency)) {
+            this.createRedDragon()
+            this.enemiesFrequency--
         }
-        this.frames % this.enemiesFrequency === 0 ? this.createRedDragon() : null
-        !this.enemiesFrequency && "done"
+        !(this.frames % 400) && this.createInnocent()
+        if (this.enemiesFrequency === 40) {
+            this.wave = 2
+            this.enemiesFrequency = 60
+        }
     },
-    secondWave(){
-        this.enemiesFrequency = 60
-        if (!this.frames % this.enemiesFrequency) {
-            this.enemiesFrequency === 15 ? this.enemiesFrequency = undefined : this.enemiesFrequency--
+    secondWave() {
+        if (!(this.frames % this.enemiesFrequency)) {
+            this.createRedDragon()
+            this.enemiesFrequency--
         }
-        !this.frames % 400 && this.createInnocent()
-        !this.frames % this.enemiesFrequency && this.createRedDragon()
+        !(this.frames % 400) && this.createInnocent()
+        if (this.enemiesFrequency === 15) {
+            this.wave = 3
+            this.enemiesFrequency = 50
+        }
     },
     thirdWave() {
-        this.enemiesFrequency = 60
-        if (!this.frames % this.enemiesFrequency) {
-            this.enemiesFrequency === 15 ? this.enemiesFrequency = undefined : this.enemiesFrequency--
+        if (!(this.frames % this.enemiesFrequency)) {
+            this.createRedDragon()
+            this.enemiesFrequency--
         }
-        !this.frames % 400 && this.createInnocent()
-        !this.frames % this.enemiesFrequency && this.createRedDragon()
-        !this.frames % this.enemiesFrequency && this.createWhiteDragon()
+        !(this.frames % 80) && this.createWhiteDragon()
+        !(this.frames % 400) && this.createInnocent()
     },
     createSlingshot() {
         this.slingShot = new Slingshot(this.ctx, this.canvasDOM, this.canvasSize, this.canvasSize.w / 2 - 25, this.canvasSize.h - 200, 100, 100, this.lives)
     },
     createRedDragon() {
         this.characters.push(new Character(this.ctx, this.canvasSize, 'redDragon', 40))
-        console.log("creado")
     },
     createWhiteDragon() {
         this.characters.push(new Character(this.ctx, this.canvasSize, 'whiteDragon', 40))
@@ -147,7 +152,7 @@ const appGame = {
             this.characters.forEach((eachCharacter, eachCharacterIndex) => {
                 // const dx = eachExp.position.x - eachCharacter.position.x
                 // const dy = eachExp.position.y - eachCharacter.position.y
-                this.isCollisionDistance = Math.sqrt((eachExp.position.x - eachCharacter.position.x)**2 + (eachExp.position.y - eachCharacter.position.y)**2)
+                this.isCollisionDistance = Math.sqrt((eachExp.position.x - eachCharacter.position.x) ** 2 + (eachExp.position.y - eachCharacter.position.y) ** 2)
                 if (this.isCollisionDistance < eachExp.radius + eachCharacter.radius) {
                     returnedCharacter = eachCharacter.character
                     this.characters.splice(eachCharacterIndex, 1)

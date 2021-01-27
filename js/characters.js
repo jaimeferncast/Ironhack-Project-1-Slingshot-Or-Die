@@ -14,14 +14,13 @@ class Character {
     }
     draw(framesCounter) {
         this.move()
-        console.log(this.character)
         if (this.character === "redDragon") {
             this.image.src = "./img/reddragon.png"
             this.image.frames = 4
         } else if (this.character === "whiteDragon") {
             this.image.src = "./img/whitedragon.png"
             this.image.frames = 4
-        } else {
+        } else if (this.character === "innocent") {
             this.image.src = "./img/innocent.png"
             this.image.frames = 6
         }
