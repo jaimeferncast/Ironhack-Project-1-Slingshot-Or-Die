@@ -8,7 +8,7 @@ class Banner {
     draw() {
         this.move()
         this.ctx.font = 'bold 50px serif'
-        this.ctx.fillText(`SECOND WAVE COMING!`, this.position.x, this.position.y)
+        this.ctx.fillText(this.text, this.position.x, this.position.y)
     }
     move() {
         this.position.y += this.speed

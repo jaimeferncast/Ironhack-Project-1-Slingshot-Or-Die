@@ -1,6 +1,6 @@
 const appGame = {
     name: 'Slingshot or die',
-    description: 'Use your slingshot to sutvive!',
+    description: 'Use your slingshot to survive!',
     authors: 'Verónica Alcalá & Jaime Fernández',
     version: '1.0.0',
     license: undefined,
@@ -66,14 +66,9 @@ const appGame = {
         this.characters.forEach(elm => elm.draw(this.frames))
         this.waveBanners.forEach(elm => elm.draw())
     },
-    animateAll() {  // REFACTORIZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        this.explosions.forEach(elm => {
-            elm.animate()
-        })
-        this.slingShot.bombs.forEach(elm => {
-            elm.animate()
-        })
-        
+    animateAll() {
+        this.explosions.forEach(elm => elm.animate())
+        this.slingShot.bombs.forEach(elm => elm.animate())
     },
     clearScreen() {
         this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
@@ -103,7 +98,7 @@ const appGame = {
         }
     },
     secondWave() {
-        console.log("SECOND WAVE!")
+        // console.log("SECOND WAVE!")
         !(this.frames % this.enemiesFrequency) && this.createRedDragon()
         !(this.frames % 80) && this.enemiesFrequency--
         !(this.frames % 400) && this.createInnocent()
@@ -115,7 +110,7 @@ const appGame = {
         }
     },
     thirdWave() {
-        console.log("THIRD WAVE!")
+        // console.log("THIRD WAVE!")
         !(this.frames % this.enemiesFrequency) && this.createRedDragon()
         !(this.frames % 80) && this.enemiesFrequency--
         !(this.frames % 80) && this.createWhiteDragon()
