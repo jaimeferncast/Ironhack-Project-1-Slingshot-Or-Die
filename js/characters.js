@@ -4,17 +4,27 @@ class Character {
         this.ctx = ctx
         this.canvasSize = canvasSize
         this.radius = radius
-        this.position = { x: this.randomPosX() + this.radius, y: 0 - this.randomPosY() - this.radius }
+        this.position = { x: this.randomPosX() + 150, y: 0 - this.randomPosY() - this.radius }
         this.character = character
         this.speed = 1 + this.randomSpeed()
         this.image = new Image()
-        this.image.src = "./img/dragon.png"
-        this.image.frames = 4;
+        this.image.src = undefined
+        this.image.frames = undefined;
         this.image.framesIndex = 0;
     }
     draw(framesCounter) {
         this.move()
-        // if (this.character === 'innocent') {}
+        console.log(this.character)
+        if (this.character === "redDragon") {
+            this.image.src = "./img/reddragon.png"
+            this.image.frames = 4
+        } else if (this.character === "whiteDragon") {
+            this.image.src = "./img/whitedragon.png"
+            this.image.frames = 4
+        } else {
+            this.image.src = "./img/innocent.png"
+            this.image.frames = 6
+        }
         this.ctx.drawImage(
             this.image,
             this.image.framesIndex * Math.floor(this.image.width / this.image.frames),
@@ -39,9 +49,8 @@ class Character {
             this.image.framesIndex = 0;
         }
     }
-    // refactorizar
     randomPosX() {
-        return Math.floor(Math.random() * (this.canvasSize.w - this.radius * 2))
+        return Math.floor(Math.random() * (this.canvasSize.w - 300))
     }
     randomPosY() {
         return Math.floor(Math.random() * 50)
