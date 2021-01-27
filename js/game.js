@@ -14,7 +14,8 @@ const appGame = {
     slingShot: undefined,
     characters: [],
     explosions: [],
-    enemiesFrequency: 50,
+    isCollisionDistance: undefined,
+    enemiesFrequency: 0,
     frames: 0,
     score: 0,
     record: 0,
@@ -45,14 +46,7 @@ const appGame = {
             this.clearScreen()
             this.drawAll()
             this.animateAll()
-            this.frames % 400 === 0 ? this.createInnocent() : null
-            if (this.frames % 50 === 0) {
-                if (this.enemiesFrequency === 15) {
-                    this.enemiesFrequency = 50
-                }
-                else { this.enemiesFrequency-- }
-            }
-            this.frames % this.enemiesFrequency === 0 ? this.createEnemies() : null
+            this.createWaves()
             this.explodeBomb()
             this.updateScore(this.isCollision())
             this.isGameOver()
@@ -61,6 +55,7 @@ const appGame = {
         }, 40)
     },
     drawAll() {
+        this.showBoardImage()
         this.printScore()
         this.slingShot.draw()
         this.characters.forEach(elm => {
@@ -78,11 +73,50 @@ const appGame = {
     clearScreen() {
         this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
     },
+    showBoardImage() {
+        let boardImage = new Image()
+        boardImage.src = "./img/background.jpg"
+        this.ctx.drawImage(boardImage, -50, 0, this.canvasSize.w + 100, this.canvasSize.h + 200)
+    },
+    createWaves() {
+        this.frames === 1 && this.firstWave()
+        // console.log(this.firstWave())
+    },
+    firstWave() {
+        this.enemiesFrequency = 100
+
+        if (this.frames % this.enemiesFrequency === 0) {
+            this.enemiesFrequency === 40 ? this.enemiesFrequency = undefined : this.enemiesFrequency--
+        }
+        this.frames % this.enemiesFrequency === 0 ? this.createRedDragon() : null
+        !this.enemiesFrequency && "done"
+    },
+    secondWave(){
+        this.enemiesFrequency = 60
+        if (!this.frames % this.enemiesFrequency) {
+            this.enemiesFrequency === 15 ? this.enemiesFrequency = undefined : this.enemiesFrequency--
+        }
+        !this.frames % 400 && this.createInnocent()
+        !this.frames % this.enemiesFrequency && this.createRedDragon()
+    },
+    thirdWave() {
+        this.enemiesFrequency = 60
+        if (!this.frames % this.enemiesFrequency) {
+            this.enemiesFrequency === 15 ? this.enemiesFrequency = undefined : this.enemiesFrequency--
+        }
+        !this.frames % 400 && this.createInnocent()
+        !this.frames % this.enemiesFrequency && this.createRedDragon()
+        !this.frames % this.enemiesFrequency && this.createWhiteDragon()
+    },
     createSlingshot() {
         this.slingShot = new Slingshot(this.ctx, this.canvasDOM, this.canvasSize, this.canvasSize.w / 2 - 25, this.canvasSize.h - 200, 100, 100, this.lives)
     },
-    createEnemies() {
-        this.characters.push(new Character(this.ctx, this.canvasSize, 'enemy', 40))
+    createRedDragon() {
+        this.characters.push(new Character(this.ctx, this.canvasSize, 'redDragon', 40))
+        console.log("creado")
+    },
+    createWhiteDragon() {
+        this.characters.push(new Character(this.ctx, this.canvasSize, 'whiteDragon', 40))
     },
     createInnocent() {
         this.characters.push(new Character(this.ctx, this.canvasSize, 'innocent', 20))
@@ -108,13 +142,13 @@ const appGame = {
     },
     isCollision() {
         let returnedCharacter = undefined
-        this.explosions.forEach(elm => {
-            let eachExp = elm
+        this.explosions.forEach(eachExp => {
+            // let eachExp = elm
             this.characters.forEach((eachCharacter, eachCharacterIndex) => {
-                const dx = eachExp.position.x - eachCharacter.position.x
-                const dy = eachExp.position.y - eachCharacter.position.y
-                let distance = Math.sqrt(dx * dx + dy * dy)
-                if (distance < eachExp.radius + eachCharacter.radius) {
+                // const dx = eachExp.position.x - eachCharacter.position.x
+                // const dy = eachExp.position.y - eachCharacter.position.y
+                this.isCollisionDistance = Math.sqrt((eachExp.position.x - eachCharacter.position.x)**2 + (eachExp.position.y - eachCharacter.position.y)**2)
+                if (this.isCollisionDistance < eachExp.radius + eachCharacter.radius) {
                     returnedCharacter = eachCharacter.character
                     this.characters.splice(eachCharacterIndex, 1)
                 }
@@ -146,6 +180,7 @@ const appGame = {
         if (this.lives === 0) {
             clearInterval(this.interval)
             this.clearScreen()
+            this.showBoardImage()
             this.ctx.font = 'bold 80px serif'
             this.ctx.fillText(`GAME OVER`, 200, 300)
         }
