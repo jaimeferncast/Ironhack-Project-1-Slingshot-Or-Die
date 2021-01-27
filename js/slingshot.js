@@ -17,6 +17,12 @@ class Slingshot {
         this.image = new Image()
         this.image.src = "./img/slingshot.png"
         this.lives = lives
+        this.slingshotBoundaries = {
+            left: this.position.x,
+            right: this.position.x + this.size.w,
+            top: this.position.y,
+            bottom: this.position.y + this.size.h
+        }
     }
 
     draw() {
@@ -33,7 +39,12 @@ class Slingshot {
     setEventListeners() {
 
         this.canvasDOM.addEventListener('mousedown', e => {
-            this.lives > 0 && this.position.x + this.size.w > e.offsetX && e.offsetX > this.position.x && this.position.y + this.size.h > e.offsetY && e.offsetY > this.position.y ? this.isDown = true : null
+            this.lives > 0 
+            && this.slingshotBoundaries.right > e.offsetX 
+            && e.offsetX > this.slingshotBoundaries.left 
+            && this.slingshotBoundaries.bottom > e.offsetY 
+            && e.offsetY > this.slingshotBoundaries.top ?
+            this.isDown = true : null
         })
 
         this.canvasDOM.addEventListener('mousemove', e => {

@@ -33,3 +33,32 @@ class Explosions {
         this.image.framesIndex++
     }
 }
+
+class Crack extends Explosions {
+    constructor(ctx, position) {
+        super (ctx, position)
+        this.size = {
+            w: 60,
+            h: 60
+        }
+        this.image = new Image()
+        this.image.src = "./img/crack.png"
+        this.angle = Math.floor(Math.random()*360)
+    }
+    draw() {
+        this.ctx.globalAlpha = .5
+        this.ctx.save()
+        this.ctx.translate(this.position.x, this.position.y)
+        this.ctx.rotate(this.angle * Math.PI / 180)
+        this.ctx.translate(-this.position.x, -this.position.y)
+        this.ctx.drawImage(
+            this.image,
+            this.position.x - this.size.w / 2,
+            this.position.y - this.size.h / 2,
+            this.size.w,
+            this.size.h
+        )
+        this.ctx.restore()
+        this.ctx.globalAlpha = 1
+    }
+}

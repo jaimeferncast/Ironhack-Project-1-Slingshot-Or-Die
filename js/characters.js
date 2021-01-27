@@ -6,7 +6,7 @@ class Character {
         this.radius = radius
         this.position = { x: this.randomPosX() + 150, y: 0 - this.randomPosY() - this.radius }
         this.character = character
-        this.speed = 1 + this.randomSpeed()
+        this.speed = (2 + this.randomSpeed()) / 2
         this.image = new Image()
         this.image.src = undefined
         this.image.frames = undefined;
@@ -41,12 +41,8 @@ class Character {
         this.ctx.closePath()
     }
     animate(framesCounter) {
-        if (framesCounter % 5 == 0) {
-            this.image.framesIndex++;
-        }
-        if (this.image.framesIndex >= this.image.frames) {
-            this.image.framesIndex = 0;
-        }
+        !(framesCounter % 5) && this.image.framesIndex++
+        this.image.framesIndex >= this.image.frames ? this.image.framesIndex = 0 : null
     }
     randomPosX() {
         return Math.floor(Math.random() * (this.canvasSize.w - 300))
@@ -55,11 +51,9 @@ class Character {
         return Math.floor(Math.random() * 50)
     }
     randomSpeed() {
-        if (this.character === 'enemy') {
-            return Math.floor(Math.random() * 3)
-        } else {
-            return 0
-        }
+        if (this.character === 'redDragon' || this.character === 'whiteDragon') {
+            return Math.floor(Math.random() * 5)
+        } else { return 0 }
     }
     move() {
         this.position.y += this.speed
