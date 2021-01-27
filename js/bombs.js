@@ -35,18 +35,8 @@ class Bomb {
         this.position.x += this.speed.x
     }
     hasBombLanded() {
-        if (this.speed.x < 0) {
-            if (this.landingPos.x >= this.position.x || this.landingPos.y >= this.position.y) {
-                return true
-            }
-        } else if (this.speed.x > 0) {
-            if (this.landingPos.x <= this.position.x || this.landingPos.y >= this.position.y) {
-                return true
-            }
-        } else {
-            if (this.landingPos.y >= this.position.y) {
-                return true
-            }
+        if (this.position.y <= this.landingPos.y) {
+            return true
         }
     }
 }

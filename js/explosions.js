@@ -35,14 +35,14 @@ class Explosions {
 
 class Crack extends Explosions {
     constructor(ctx, position) {
-        super (ctx, position)
+        super(ctx, position)
         this.size = {
-            w: 60,
-            h: 60
+            w: 40,
+            h: 40
         }
         this.image = new Image()
         this.image.src = "./img/crack.png"
-        this.angle = Math.floor(Math.random()*360)
+        this.angle = Math.floor(Math.random() * 360)
     }
     draw() {
         this.ctx.globalAlpha = .5

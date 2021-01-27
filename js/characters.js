@@ -31,9 +31,9 @@ class Character {
             Math.floor(this.image.width / this.image.frames),
             this.image.height,
             this.position.x - this.radius,
-            this.position.y - this.radius,
+            this.position.y - Math.floor(this.radius / (this.image.width / this.image.frames) * this.image.height),
             this.radius * 2,
-            this.radius * 2
+            Math.floor(this.radius / (this.image.width / this.image.frames) * this.image.height) * 2
         )
         this.animate(framesCounter)
         this.ctx.beginPath()
@@ -57,5 +57,37 @@ class Character {
     }
     move() {
         this.position.y += this.speed
+    }
+}
+
+class Spill {
+    constructor(ctx, character, position, frameAtDeath) {
+        this.ctx = ctx
+        this.character = character
+        this.position = position
+        this.frameAtDeath = frameAtDeath
+        this.image = new Image()
+        this.image.src = "./img/blood.png"
+        this.image.frames = 21
+        this.image.framesIndex = 0
+    }
+    draw() {
+        if (this.character === 'innocent') {
+            this.image.src = "./img/blood.png"
+        } else { this.image.src = "./img/dragonblood.png" }
+        this.ctx.drawImage(
+            this.image,
+            this.image.framesIndex * Math.floor(this.image.width / this.image.frames),
+            0,
+            Math.floor(this.image.width / this.image.frames),
+            this.image.height,
+            this.position.x - 100,
+            this.position.y - 80,
+            100 * 2,
+            100 * 2
+        )
+    }
+    animate() {
+        this.image.framesIndex++
     }
 }

@@ -2,7 +2,7 @@ class Banner {
     constructor(ctx, text) {
         this.ctx = ctx
         this.text = text
-        this.position = {x: 150, y: -50}
+        this.position = { x: 150, y: -300 }
         this.speed = 2
     }
     draw() {

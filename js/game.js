@@ -14,6 +14,7 @@ const appGame = {
     slingShot: undefined,
     wave: 1,
     characters: [],
+    bloodSpills: [],
     explosions: [],
     cracks: [],
     isCollisionDistance: undefined,
@@ -62,13 +63,14 @@ const appGame = {
         this.printScore()
         this.explodeBomb()
         this.slingShot.draw()
-
         this.characters.forEach(elm => elm.draw(this.frames))
         this.waveBanners.forEach(elm => elm.draw())
+        this.bloodSpills.forEach(elm => elm.draw())
     },
     animateAll() {
-        this.explosions.forEach(elm => elm.animate())
         this.slingShot.bombs.forEach(elm => elm.animate())
+        this.explosions.forEach(elm => elm.animate())
+        this.bloodSpills.forEach(elm => elm.animate())
     },
     clearScreen() {
         this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
@@ -81,7 +83,7 @@ const appGame = {
     createWave() {
         this.wave === 1 && this.firstWave()
         if (this.wave === 2) {
-            this.frames >= (this.endWaveFrames + 350) && this.secondWave()  
+            this.frames >= (this.endWaveFrames + 350) && this.secondWave()
         }
         if (this.wave === 3) {
             this.frames >= (this.endWaveFrames + 250) && this.thirdWave()
@@ -98,7 +100,6 @@ const appGame = {
         }
     },
     secondWave() {
-        // console.log("SECOND WAVE!")
         !(this.frames % this.enemiesFrequency) && this.createRedDragon()
         !(this.frames % 80) && this.enemiesFrequency--
         !(this.frames % 400) && this.createInnocent()
@@ -110,7 +111,6 @@ const appGame = {
         }
     },
     thirdWave() {
-        // console.log("THIRD WAVE!")
         !(this.frames % this.enemiesFrequency) && this.createRedDragon()
         !(this.frames % 80) && this.enemiesFrequency--
         !(this.frames % 80) && this.createWhiteDragon()
@@ -126,7 +126,7 @@ const appGame = {
         this.characters.push(new Character(this.ctx, this.canvasSize, 'whiteDragon', 40))
     },
     createInnocent() {
-        this.characters.push(new Character(this.ctx, this.canvasSize, 'innocent', 20))
+        this.characters.push(new Character(this.ctx, this.canvasSize, 'innocent', 10))
     },
     clearCharacter() {
         this.characters.forEach((elm, i) => {
@@ -156,7 +156,8 @@ const appGame = {
                 this.isCollisionDistance = Math.sqrt((eachExp.position.x - eachCharacter.position.x) ** 2 + (eachExp.position.y - eachCharacter.position.y) ** 2)
                 if (this.isCollisionDistance < eachExp.radius + eachCharacter.radius) {
                     returnedCharacter = eachCharacter.character
-                    this.characters.splice(eachCharacterIndex, 1)      
+                    this.characters.splice(eachCharacterIndex, 1)
+                    this.bloodSpills.push(new Spill(this.ctx, returnedCharacter, eachCharacter.position, this.frames))
                 }
             })
         })
