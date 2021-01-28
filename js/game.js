@@ -26,6 +26,9 @@ const appGame = {
     endWaveFrames: 0,
     waveBanners: [],
     score: 0,
+    enemiesKilled: 0,
+    innocentsKilled: 0,
+    innocentsSaved: 0,
     record: 0,
     lives: 5,
     hearts: [],
@@ -44,11 +47,11 @@ const appGame = {
             this.ctx.textAlign = 'center'
             this.ctx.fillStyle = 'rgba(200,200,200, 0.9)'
             this.ctx.font = '17px "Press Start 2P"'
-            this.ctx.fillText(`It's simple, you have THE Holy Slingshot!`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) - 40)
-            this.ctx.fillText(`Blessed by Archbishop Germán`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3))
-            this.ctx.fillText(`and Father Teo.`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 40)
-            this.ctx.fillText(`Use it to kill dragons`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 100)
-            this.ctx.fillText(`and save innocents.`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 140)
+            this.ctx.fillText(`You have THE Holy Slingshot`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) - 60)
+            this.ctx.fillText(`blessed by Archbishop Germán`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) - 20)
+            this.ctx.fillText(`and Father Teo.`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 20)
+            this.ctx.fillText(`Use your mouse to control the slingshot,`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 90)
+            this.ctx.fillText(`kill dragons and save innocents.`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 130)
             this.ctx.font = '25px "Press Start 2P"'
             this.ctx.fillText(`Click when ready!`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 220)
             this.ctx.textAlign = 'left'
@@ -217,9 +220,18 @@ const appGame = {
         return returnedCharacter
     },
     updateScore(character) {
-        if (character === 'redDragon') { this.score += 100 }
-        else if (character === 'whiteDragon') { this.score += 200 }
-        else if (character === 'innocent') { this.score -= 200 }
+        if (character === 'redDragon') {
+            this.score += 100
+            this.enemiesKilled++
+        }
+        else if (character === 'whiteDragon') {
+            this.score += 200
+            this.enemiesKilled++
+        }
+        else if (character === 'innocent') {
+            this.score -= 200
+            this.innocentsKilled++
+        }
         this.characters.forEach(elm => {
             if ((elm.character === 'redDragon' || elm.character === 'whiteDragon') && elm.position.y > this.canvasSize.h + elm.radius) {
                 this.lives--
@@ -228,6 +240,7 @@ const appGame = {
             } else if (elm.character === 'innocent' && elm.position.y > this.canvasSize.h + elm.radius) {
                 this.lives === 5 ? null : this.lives++
                 this.slingShot.lives++
+                this.innocentsSaved++
                 sounds.extraLive.play()
             }
         })
@@ -254,8 +267,14 @@ const appGame = {
             this.ctx.fillStyle = 'rgba(255, 255, 255, 0.55)'
             this.ctx.font = '80px "Press Start 2P"'
             this.ctx.fillText(`GAME OVER`, this.canvasSize.w / 2, this.canvasSize.h / 2)
+            this.ctx.font = '35px "Press Start 2P"'
+            this.ctx.fillText(`Your score: ${this.score}`, this.canvasSize.w / 2, 600)
+            this.ctx.font = '20px "Press Start 2P"'
+            this.ctx.fillText(`Enemies killed: ${this.enemiesKilled}`, this.canvasSize.w / 2, 650)
+            this.ctx.fillText(`Innocents killed: ${this.innocentsKilled}`, this.canvasSize.w / 2, 700)
+            this.ctx.fillText(`Innocents saved: ${this.innocentsSaved}`, this.canvasSize.w / 2, 750)
             this.ctx.font = '25px "Press Start 2P"'
-            this.ctx.fillText(`Click to play again!`, this.canvasSize.w / 2, 500)
+            this.ctx.fillText(`Click to play again!`, this.canvasSize.w / 2, 830)
             this.ctx.textAlign = 'left'
             this.ctx.fillStyle = 'white'
             this.resetGame()
