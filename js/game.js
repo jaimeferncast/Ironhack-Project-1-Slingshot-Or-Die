@@ -34,8 +34,7 @@ const appGame = {
         this.ctx = this.canvasDOM.getContext('2d')
         this.setDimensions()
         this.printStartScreen()
-        this.createSlingshot()
-        this.setEventListeners()
+        this.canvasDOM.addEventListener('click', e => { !this.frames && this.startGame() })
     },
     printStartScreen() {
         this.startImage = new Image()
@@ -45,20 +44,19 @@ const appGame = {
             this.ctx.textAlign = 'center'
             this.ctx.fillStyle = 'rgba(200,200,200, 0.9)'
             this.ctx.font = '17px "Press Start 2P"'
-            this.ctx.fillText(`It's simple, you have THE Holy Slingshot!`, this.canvasSize.w / 2, 620)
-            this.ctx.fillText(`blessed by Archbishop Germán`, this.canvasSize.w / 2, 660)
-            this.ctx.fillText(`and Father Teo.`, this.canvasSize.w / 2, 700)
-            this.ctx.fillText(`Use it to kill dragons`, this.canvasSize.w / 2, 760)
-            this.ctx.fillText(`and save innocents.`, this.canvasSize.w / 2, 800)
+            this.ctx.fillText(`It's simple, you have THE Holy Slingshot!`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) - 40)
+            this.ctx.fillText(`Blessed by Archbishop Germán`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3))
+            this.ctx.fillText(`and Father Teo.`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 40)
+            this.ctx.fillText(`Use it to kill dragons`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 100)
+            this.ctx.fillText(`and save innocents.`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 140)
             this.ctx.font = '25px "Press Start 2P"'
-            this.ctx.fillText(`Click when ready!`, this.canvasSize.w / 2, 880)
+            this.ctx.fillText(`Click when ready!`, this.canvasSize.w / 2, Math.floor(this.canvasSize.h * 2 / 3) + 220)
             this.ctx.textAlign = 'left'
             this.ctx.fillStyle = 'white'
         }
     },
     setEventListeners() {
         this.slingShot.setEventListeners()
-        this.canvasDOM.addEventListener('click', e => { !this.frames && this.startGame() })
     },
     setDimensions() {
         this.canvasSize = {
@@ -70,6 +68,8 @@ const appGame = {
     },
     startGame() {
         sounds.gameStart.play()
+        this.createSlingshot()
+        this.setEventListeners()
         this.interval = setInterval(() => {
             this.frames++
             this.clearScreen()
@@ -77,9 +77,9 @@ const appGame = {
             this.drawAll()
             this.animateAll()
             this.updateScore(this.isCollision())
-            this.isGameOver()
             this.clearCharacter()
             this.clearBombs()
+            this.isGameOver()
         }, 40)
     },
     drawAll() {
@@ -258,24 +258,24 @@ const appGame = {
             this.ctx.fillText(`Click to play again!`, this.canvasSize.w / 2, 500)
             this.ctx.textAlign = 'left'
             this.ctx.fillStyle = 'white'
-            // this.resetGame()
+            this.resetGame()
         }
     },
-    // resetGame() {
-    //     this.wave = 1
-    //     this.characters = []
-    //     this.bloodSpills = []
-    //     this.explosions = []
-    //     this.cracks = []
-    //     this.isCollisionDistance = undefined
-    //     this.enemiesFrequency = 80
-    //     this.frames = 0
-    //     this.endWaveFrames = 0
-    //     this.waveBanners = []
-    //     this.score = 0
-    //     this.record = 0
-    //     this.lives = 5
-    //     this.hearts = []
-    //     this.setEventListeners()
-    // }
+    resetGame() {
+        this.slingShot = undefined
+        this.wave = 1
+        this.characters = []
+        this.bloodSpills = []
+        this.explosions = []
+        this.cracks = []
+        this.isCollisionDistance = undefined
+        this.enemiesFrequency = 80
+        this.frames = 0
+        this.endWaveFrames = 0
+        this.waveBanners = []
+        this.score = 0
+        this.record = 0
+        this.lives = 5
+        this.hearts = []
+    }
 }
