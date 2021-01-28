@@ -39,12 +39,12 @@ class Slingshot {
     setEventListeners() {
 
         this.canvasDOM.addEventListener('mousedown', e => {
-            this.lives > 0 
-            && this.slingshotBoundaries.right > e.offsetX 
-            && e.offsetX > this.slingshotBoundaries.left 
-            && this.slingshotBoundaries.bottom > e.offsetY 
-            && e.offsetY > this.slingshotBoundaries.top ?
-            this.isDown = true : null
+            this.lives > 0
+                && this.slingshotBoundaries.right > e.offsetX
+                && e.offsetX > this.slingshotBoundaries.left
+                && this.slingshotBoundaries.bottom > e.offsetY
+                && e.offsetY > this.slingshotBoundaries.top ?
+                this.isDown = true : null
         })
 
         this.canvasDOM.addEventListener('mousemove', e => {
@@ -74,6 +74,7 @@ class Slingshot {
 
         this.canvasDOM.addEventListener('mouseup', e => {
             if (this.isDown && this.pointerPosition.y > this.position.y) {
+                sounds.slingShot.play()
                 this.bombs.push(new Bomb(
                     this.ctx,
                     this.canvasDOM,

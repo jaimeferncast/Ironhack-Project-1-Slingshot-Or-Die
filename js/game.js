@@ -45,8 +45,13 @@ const appGame = {
             this.ctx.textAlign = 'center'
             this.ctx.fillStyle = 'rgba(200,200,200, 0.9)'
             this.ctx.font = '17px "Press Start 2P"'
-            this.ctx.fillText(`The Holy Slingshot has been blessed by`, this.canvasSize.w / 2, 620)
-            this.ctx.fillText(`Archbishop Germán and father Teo`, this.canvasSize.w / 2, 660)
+            this.ctx.fillText(`It's simple, you have a slingshot`, this.canvasSize.w / 2, 620)
+            this.ctx.fillText(`blessed by Archbishop Germán`, this.canvasSize.w / 2, 660)
+            this.ctx.fillText(`and Father Teo.`, this.canvasSize.w / 2, 700)
+            this.ctx.fillText(`Use it to kill dragons`, this.canvasSize.w / 2, 760)
+            this.ctx.fillText(`and save innocents.`, this.canvasSize.w / 2, 800)
+            this.ctx.font = '25px "Press Start 2P"'
+            this.ctx.fillText(`Click when ready!`, this.canvasSize.w / 2, 880)
             this.ctx.textAlign = 'left'
             this.ctx.fillStyle = 'white'
         }
@@ -185,6 +190,7 @@ const appGame = {
         this.cracks.forEach(elm => elm.draw())
         this.explosions.forEach((elm, i) => {
             elm.explode()
+            sounds.explosion.play()
             elm.radius === 84 ? this.explosions.splice(i, 1) : null
         })
     },
@@ -218,7 +224,7 @@ const appGame = {
     },
     printScore() {
         this.ctx.fillStyle = 'rgba(10,10,10, 0.5)'
-        this.ctx.font = '30px'
+        this.ctx.font = '30px "Press Start 2P"'
         this.ctx.fillText(`SCORE: ${this.score}`, 60, this.canvasSize.h - 40)
         this.ctx.fillStyle = 'white'
     },
@@ -233,8 +239,11 @@ const appGame = {
             clearInterval(this.interval)
             this.clearScreen()
             this.showBoardImage()
-            this.ctx.font = '80px'
-            this.ctx.fillText(`GAME OVER`, 200, 300)
+            this.ctx.textAlign = 'center'
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.55)'
+            this.ctx.font = '80px "Press Start 2P"'
+            this.ctx.fillText(`GAME OVER`, this.canvasSize.w / 2, this.canvasSize.h / 2)
+            this.ctx.textAlign = 'left'
         }
     }
 }
