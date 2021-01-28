@@ -11,7 +11,7 @@ const appGame = {
         w: undefined,
         h: undefined
     },
-    startButton: undefined,
+    startImage: undefined,
     boardImage: undefined,
     slingShot: undefined,
     heart: undefined,
@@ -33,34 +33,27 @@ const appGame = {
         this.canvasDOM = document.getElementById(id)
         this.ctx = this.canvasDOM.getContext('2d')
         this.setDimensions()
-        // this.printStartScreen()
+        this.printStartScreen()
         this.createSlingshot()
         this.setEventListeners()
-        this.startGame()
     },
     printStartScreen() {
-        let gameLogo = new Image()
-        gameLogo.src = "./img/gamelogo.png"
-        gameLogo.onload = () => this.ctx.drawImage(gameLogo, this.canvasSize.w - gameLogo.width, this.canvasSize.h - gameLogo.height, gameLogo.width, gameLogo.height)
-
-        this.startButton = new Image()
-        this.startButton.src = "./img/startbutton.png"
-        gameLogo.onload = () => this.ctx.drawImage(this.startButton, 0, 0, 1000, 1000)
-        // this.canvasSize.w / 2 - this.startButton.width / 2, this.canvasSize.h / 2 - this.startButton.height / 2, this.startButton.width, this.startButton.height)
-
-        console.log({ a: this.startButton })
-
-
+        this.startImage = new Image()
+        this.startImage.src = "./img/startbackground.jpg"
+        this.startImage.onload = () => {
+            this.ctx.drawImage(this.startImage, -50, 0, this.canvasSize.w + 100, this.canvasSize.h + 200)
+            this.ctx.textAlign = 'center'
+            this.ctx.fillStyle = 'rgba(200,200,200, 0.9)'
+            this.ctx.font = '17px "Press Start 2P"'
+            this.ctx.fillText(`The Holy Slingshot has been blessed by`, this.canvasSize.w / 2, 620)
+            this.ctx.fillText(`Archbishop Germán and father Teo`, this.canvasSize.w / 2, 660)
+            this.ctx.textAlign = 'left'
+            this.ctx.fillStyle = 'white'
+        }
     },
     setEventListeners() {
         this.slingShot.setEventListeners()
-        this.canvasDOM.addEventListener('onclick', e => {
-            e.offsetX > this.canvasSize.w / 2 - this.startButton.width / 2
-                && e.offsetX < this.canvasSize.w / 2 + this.startButton.width / 2
-                && e.offsetY > this.canvasSize.h / 2 - this.startButton.height / 2
-                && e.offsetY < this.canvasSize.h / 2 + this.startButton.height / 2 ?
-                this.startGame() : null
-        })
+        this.canvasDOM.addEventListener('click', e => { !this.frames && this.startGame() })
     },
     setDimensions() {
         this.canvasSize = {
@@ -109,12 +102,16 @@ const appGame = {
     showHeartImg(num) {
         this.heart = new Image()
         this.heart.src = "./img/heart.png"
+        this.ctx.globalAlpha = 0.7
         this.ctx.drawImage(this.heart, num, this.canvasSize.h - 80, 40, 40)
+        this.ctx.globalAlpha = 1.0
     },
     showEmptyHeartImg(num) {
         let heart = new Image()
         heart.src = "./img/heartgris.png"
+        this.ctx.globalAlpha = 0.5
         this.ctx.drawImage(heart, num, this.canvasSize.h - 80, 40, 40)
+        this.ctx.globalAlpha = 1.0
     },
     createWave() {
         this.wave === 1 && this.firstWave()
@@ -220,14 +217,14 @@ const appGame = {
         })
     },
     printScore() {
-        this.ctx.fillStyle = 'white'
-        this.ctx.font = 'bold 40px Press Start 2P'
-        this.ctx.fillText(`SCORE: ${this.score}`, 50, this.canvasSize.h - 45)
+        this.ctx.fillStyle = 'rgba(10,10,10, 0.5)'
+        this.ctx.font = '30px'
+        this.ctx.fillText(`SCORE: ${this.score}`, 60, this.canvasSize.h - 40)
         this.ctx.fillStyle = 'white'
     },
     printLives() {
         for (let i = 0; i <= 4; i++) {
-            this.showHeartImg(i * 50 + 600)
+            i < this.lives && this.showHeartImg(i * 50 + 600)
             i >= this.lives && this.showEmptyHeartImg(i * 50 + 600)
         }
     },
@@ -236,7 +233,7 @@ const appGame = {
             clearInterval(this.interval)
             this.clearScreen()
             this.showBoardImage()
-            this.ctx.font = 'bold 80px'
+            this.ctx.font = '80px'
             this.ctx.fillText(`GAME OVER`, 200, 300)
         }
     }
