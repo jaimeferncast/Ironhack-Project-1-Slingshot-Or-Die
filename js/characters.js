@@ -90,4 +90,9 @@ class Spill {
     animate() {
         this.image.framesIndex++
     }
+    clearSpill(frames) {
+        if (frames >= this.frameAtDeath + 22) {
+            return true
+        }
+    }
 }

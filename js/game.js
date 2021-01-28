@@ -26,7 +26,7 @@ const appGame = {
     record: 0,
     lives: 20,
     init(id) {
-        this.canvasDOM = document.getElementById('mycanvas')
+        this.canvasDOM = document.getElementById(id)
         this.ctx = this.canvasDOM.getContext('2d')
         this.setDimensions()
         this.createSlingshot()
@@ -47,7 +47,7 @@ const appGame = {
     },
     startGame() {
         this.interval = setInterval(() => {
-            this.frames > 5000 ? this.frames = 1 : this.frames++
+            this.frames++
             this.clearScreen()
             this.createWave()
             this.drawAll()
@@ -56,6 +56,9 @@ const appGame = {
             this.isGameOver()
             this.clearCharacter()
             this.clearBombs()
+            if (!(this.frames % 250)) {
+                console.log(this.characters, this.bloodSpills, this.slingShot.bombs, this.explosions, this.cracks, this.waveBanners)
+            }
         }, 40)
     },
     drawAll() {
@@ -115,6 +118,9 @@ const appGame = {
         !(this.frames % 80) && this.enemiesFrequency--
         !(this.frames % 80) && this.createWhiteDragon()
         !(this.frames % 400) && this.createInnocent()
+        if (this.enemiesFrequency === 1) {
+            this.enemiesFrequency += 5
+        }
     },
     createSlingshot() {
         this.slingShot = new Slingshot(this.ctx, this.canvasDOM, this.canvasSize, this.canvasSize.w / 2 - 25, this.canvasSize.h - 200, 100, 100, this.lives)
@@ -131,6 +137,9 @@ const appGame = {
     clearCharacter() {
         this.characters.forEach((elm, i) => {
             elm.position.y > this.canvasSize.h + elm.radius ? this.characters.splice(i, 1) : null
+        })
+        this.bloodSpills.forEach((elm, i) => {
+            elm.clearSpill(this.frames) ? this.bloodSpills.splice(i, 1) : null
         })
     },
     clearBombs() {
