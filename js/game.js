@@ -45,7 +45,7 @@ const appGame = {
             this.ctx.textAlign = 'center'
             this.ctx.fillStyle = 'rgba(200,200,200, 0.9)'
             this.ctx.font = '17px "Press Start 2P"'
-            this.ctx.fillText(`It's simple, you have a slingshot`, this.canvasSize.w / 2, 620)
+            this.ctx.fillText(`It's simple, you have THE Holy Slingshot!`, this.canvasSize.w / 2, 620)
             this.ctx.fillText(`blessed by Archbishop Germán`, this.canvasSize.w / 2, 660)
             this.ctx.fillText(`and Father Teo.`, this.canvasSize.w / 2, 700)
             this.ctx.fillText(`Use it to kill dragons`, this.canvasSize.w / 2, 760)
@@ -69,6 +69,7 @@ const appGame = {
         this.canvasDOM.setAttribute('height', this.canvasSize.h)
     },
     startGame() {
+        sounds.gameStart.play()
         this.interval = setInterval(() => {
             this.frames++
             this.clearScreen()
@@ -133,6 +134,7 @@ const appGame = {
         if (this.enemiesFrequency === 60) {
             this.wave = 2
             this.wave === 2 && this.waveBanners.push(new Banner(this.ctx, "SECOND WAVE COMING!"))
+            setTimeout(() => { sounds.waves.play() }, 7000)
             this.endWaveFrames = this.frames
             this.enemiesFrequency = 70
         }
@@ -202,6 +204,12 @@ const appGame = {
                 if (this.isCollisionDistance < eachExp.radius + eachCharacter.radius) {
                     returnedCharacter = eachCharacter.character
                     this.characters.splice(eachCharacterIndex, 1)
+                    if (returnedCharacter === 'innocent') {
+                        sounds.innocentCry.play()
+                    } else {
+                        sounds.dragonCry.play()
+                        sounds.blood.play()
+                    }
                     this.bloodSpills.push(new Spill(this.ctx, returnedCharacter, eachCharacter.position, this.frames))
                 }
             })
@@ -216,9 +224,11 @@ const appGame = {
             if ((elm.character === 'redDragon' || elm.character === 'whiteDragon') && elm.position.y > this.canvasSize.h + elm.radius) {
                 this.lives--
                 this.slingShot.lives--
+                sounds.dragonRoar.play()
             } else if (elm.character === 'innocent' && elm.position.y > this.canvasSize.h + elm.radius) {
                 this.lives === 5 ? null : this.lives++
                 this.slingShot.lives++
+                sounds.extraLive.play()
             }
         })
     },
@@ -237,13 +247,35 @@ const appGame = {
     isGameOver() {
         if (this.lives === 0) {
             clearInterval(this.interval)
+            sounds.gameOver.play()
             this.clearScreen()
             this.showBoardImage()
             this.ctx.textAlign = 'center'
             this.ctx.fillStyle = 'rgba(255, 255, 255, 0.55)'
             this.ctx.font = '80px "Press Start 2P"'
             this.ctx.fillText(`GAME OVER`, this.canvasSize.w / 2, this.canvasSize.h / 2)
+            this.ctx.font = '25px "Press Start 2P"'
+            this.ctx.fillText(`Click to play again!`, this.canvasSize.w / 2, 500)
             this.ctx.textAlign = 'left'
+            this.ctx.fillStyle = 'white'
+            // this.resetGame()
         }
-    }
+    },
+    // resetGame() {
+    //     this.wave = 1
+    //     this.characters = []
+    //     this.bloodSpills = []
+    //     this.explosions = []
+    //     this.cracks = []
+    //     this.isCollisionDistance = undefined
+    //     this.enemiesFrequency = 80
+    //     this.frames = 0
+    //     this.endWaveFrames = 0
+    //     this.waveBanners = []
+    //     this.score = 0
+    //     this.record = 0
+    //     this.lives = 5
+    //     this.hearts = []
+    //     this.setEventListeners()
+    // }
 }

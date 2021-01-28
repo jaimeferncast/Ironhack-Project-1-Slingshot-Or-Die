@@ -8,5 +8,6 @@ const sounds = {
     gameStart: new Audio('./sounds/gamestart.wav'),
     slingShot: new Audio('./sounds/slingshot.wav'),
     waves: new Audio('./sounds/waves.wav'),
-    // explosion: new Audio('./sounds/explosion.wav')
+    dragonRoar: new Audio('./sounds/dragonroar.wav'),
+    innocentCry: new Audio('./sounds/innocentcry.wav')
 }
