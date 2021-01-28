@@ -72,9 +72,7 @@ class Spill {
         this.image.framesIndex = 0
     }
     draw() {
-        if (this.character === 'innocent') {
-            this.image.src = "./img/blood.png"
-        } else { this.image.src = "./img/dragonblood.png" }
+        if (!(this.character === 'innocent')) { this.image.src = "./img/dragonblood.png" }
         this.ctx.drawImage(
             this.image,
             this.image.framesIndex * Math.floor(this.image.width / this.image.frames),

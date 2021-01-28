@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'Press Start 2P', cursive;
+    src: local('Press Start 2P'), url('../fonts/PressStart2P-Regular.ttf'), format('truetype');
+}
+
+/* @font-face {
+font-family: 'RifficFree-Bold';
+src: local('RifficFree-Bold'), url(./fonts/RifficFree-Bold.ttf), format('truetype');
+} */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,6 +15,7 @@
 
 #mycanvas {
     /* background-color: rgb(255, 150, 80); */
+    font-family: "Press Start 2P";
     margin: 0 auto;
-    display: block;
+    display: block;    
 }

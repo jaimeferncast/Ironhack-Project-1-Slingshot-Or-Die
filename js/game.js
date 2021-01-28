@@ -11,7 +11,10 @@ const appGame = {
         w: undefined,
         h: undefined
     },
+    startButton: undefined,
+    boardImage: undefined,
     slingShot: undefined,
+    heart: undefined,
     wave: 1,
     characters: [],
     bloodSpills: [],
@@ -24,18 +27,40 @@ const appGame = {
     waveBanners: [],
     score: 0,
     record: 0,
-    lives: 20,
+    lives: 5,
+    hearts: [],
     init(id) {
         this.canvasDOM = document.getElementById(id)
         this.ctx = this.canvasDOM.getContext('2d')
         this.setDimensions()
+        // this.printStartScreen()
         this.createSlingshot()
         this.setEventListeners()
         this.startGame()
     },
+    printStartScreen() {
+        let gameLogo = new Image()
+        gameLogo.src = "./img/gamelogo.png"
+        gameLogo.onload = () => this.ctx.drawImage(gameLogo, this.canvasSize.w - gameLogo.width, this.canvasSize.h - gameLogo.height, gameLogo.width, gameLogo.height)
+
+        this.startButton = new Image()
+        this.startButton.src = "./img/startbutton.png"
+        gameLogo.onload = () => this.ctx.drawImage(this.startButton, 0, 0, 1000, 1000)
+        // this.canvasSize.w / 2 - this.startButton.width / 2, this.canvasSize.h / 2 - this.startButton.height / 2, this.startButton.width, this.startButton.height)
+
+        console.log({ a: this.startButton })
+
+
+    },
     setEventListeners() {
         this.slingShot.setEventListeners()
-
+        this.canvasDOM.addEventListener('onclick', e => {
+            e.offsetX > this.canvasSize.w / 2 - this.startButton.width / 2
+                && e.offsetX < this.canvasSize.w / 2 + this.startButton.width / 2
+                && e.offsetY > this.canvasSize.h / 2 - this.startButton.height / 2
+                && e.offsetY < this.canvasSize.h / 2 + this.startButton.height / 2 ?
+                this.startGame() : null
+        })
     },
     setDimensions() {
         this.canvasSize = {
@@ -56,13 +81,11 @@ const appGame = {
             this.isGameOver()
             this.clearCharacter()
             this.clearBombs()
-            if (!(this.frames % 250)) {
-                console.log(this.characters, this.bloodSpills, this.slingShot.bombs, this.explosions, this.cracks, this.waveBanners)
-            }
         }, 40)
     },
     drawAll() {
         this.showBoardImage()
+        this.printLives()
         this.printScore()
         this.explodeBomb()
         this.slingShot.draw()
@@ -79,9 +102,19 @@ const appGame = {
         this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
     },
     showBoardImage() {
-        let boardImage = new Image()
-        boardImage.src = "./img/background.jpg"
-        this.ctx.drawImage(boardImage, -50, 0, this.canvasSize.w + 100, this.canvasSize.h + 200)
+        this.boardImage = new Image()
+        this.boardImage.src = "./img/background.jpg"
+        this.ctx.drawImage(this.boardImage, -50, 0, this.canvasSize.w + 100, this.canvasSize.h + 200)
+    },
+    showHeartImg(num) {
+        this.heart = new Image()
+        this.heart.src = "./img/heart.png"
+        this.ctx.drawImage(this.heart, num, this.canvasSize.h - 80, 40, 40)
+    },
+    showEmptyHeartImg(num) {
+        let heart = new Image()
+        heart.src = "./img/heartgris.png"
+        this.ctx.drawImage(heart, num, this.canvasSize.h - 80, 40, 40)
     },
     createWave() {
         this.wave === 1 && this.firstWave()
@@ -139,7 +172,7 @@ const appGame = {
             elm.position.y > this.canvasSize.h + elm.radius ? this.characters.splice(i, 1) : null
         })
         this.bloodSpills.forEach((elm, i) => {
-            elm.clearSpill(this.frames) ? this.bloodSpills.splice(i, 1) : null
+            elm.clearSpill(this.frames) && this.bloodSpills.splice(i, 1)
         })
     },
     clearBombs() {
@@ -181,24 +214,29 @@ const appGame = {
                 this.lives--
                 this.slingShot.lives--
             } else if (elm.character === 'innocent' && elm.position.y > this.canvasSize.h + elm.radius) {
-                this.lives++
+                this.lives === 5 ? null : this.lives++
                 this.slingShot.lives++
             }
         })
     },
     printScore() {
-        this.ctx.fillStyle = 'brown'
-        this.ctx.font = 'bold 30px serif'
-        this.ctx.fillText(`Your Score is ${this.score}`, 50, this.canvasSize.h - 50)
-        this.ctx.fillText(`lives remaining: ${this.lives}`, 625, this.canvasSize.h - 50)
         this.ctx.fillStyle = 'white'
+        this.ctx.font = 'bold 40px Press Start 2P'
+        this.ctx.fillText(`SCORE: ${this.score}`, 50, this.canvasSize.h - 45)
+        this.ctx.fillStyle = 'white'
+    },
+    printLives() {
+        for (let i = 0; i <= 4; i++) {
+            this.showHeartImg(i * 50 + 600)
+            i >= this.lives && this.showEmptyHeartImg(i * 50 + 600)
+        }
     },
     isGameOver() {
         if (this.lives === 0) {
             clearInterval(this.interval)
             this.clearScreen()
             this.showBoardImage()
-            this.ctx.font = 'bold 80px serif'
+            this.ctx.font = 'bold 80px'
             this.ctx.fillText(`GAME OVER`, 200, 300)
         }
     }
