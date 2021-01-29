@@ -36,9 +36,6 @@ class Character {
             Math.floor(this.radius / (this.image.width / this.image.frames) * this.image.height) * 2
         )
         this.animate(framesCounter)
-        this.ctx.beginPath()
-        this.ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        this.ctx.closePath()
     }
     animate(framesCounter) {
         !(framesCounter % 5) && this.image.framesIndex++

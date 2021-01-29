@@ -29,8 +29,9 @@ const appGame = {
     enemiesKilled: 0,
     innocentsKilled: 0,
     innocentsSaved: 0,
-    record: 0,
-    lives: 5,
+    highscore: localStorage.getItem("highscore"),
+    maxLives: 5,
+    lives: undefined,
     hearts: [],
     init(id) {
         this.canvasDOM = document.getElementById(id)
@@ -71,6 +72,7 @@ const appGame = {
     },
     startGame() {
         sounds.gameStart.play()
+        this.lives = this.maxLives
         this.createSlingshot()
         this.setEventListeners()
         this.interval = setInterval(() => {
@@ -252,7 +254,7 @@ const appGame = {
         this.ctx.fillStyle = 'white'
     },
     printLives() {
-        for (let i = 0; i <= 4; i++) {
+        for (let i = 0; i < this.maxLives; i++) {
             i < this.lives && this.showHeartImg(i * 50 + 600)
             i >= this.lives && this.showEmptyHeartImg(i * 50 + 600)
         }
@@ -262,19 +264,23 @@ const appGame = {
             clearInterval(this.interval)
             sounds.gameOver.play()
             this.clearScreen()
+            this.score > this.highscore ? this.highscore = this.score : null
+            localStorage.setItem("highscore", this.highscore)
             this.showBoardImage()
             this.ctx.textAlign = 'center'
             this.ctx.fillStyle = 'rgba(255, 255, 255, 0.55)'
             this.ctx.font = '80px "Press Start 2P"'
-            this.ctx.fillText(`GAME OVER`, this.canvasSize.w / 2, this.canvasSize.h / 2)
+            this.ctx.fillText(`GAME OVER`, this.canvasSize.w / 2, this.canvasSize.h / 2 - 150)
+            this.ctx.font = '45px "Press Start 2P"'
+            this.ctx.fillText(`High score: ${this.highscore}`, this.canvasSize.w / 2, this.canvasSize.h / 2 - 50)
             this.ctx.font = '35px "Press Start 2P"'
-            this.ctx.fillText(`Your score: ${this.score}`, this.canvasSize.w / 2, 600)
+            this.ctx.fillText(`Your score: ${this.score}`, this.canvasSize.w / 2, this.canvasSize.h / 2 + 50)
             this.ctx.font = '20px "Press Start 2P"'
-            this.ctx.fillText(`Enemies killed: ${this.enemiesKilled}`, this.canvasSize.w / 2, 650)
-            this.ctx.fillText(`Innocents killed: ${this.innocentsKilled}`, this.canvasSize.w / 2, 700)
-            this.ctx.fillText(`Innocents saved: ${this.innocentsSaved}`, this.canvasSize.w / 2, 750)
+            this.ctx.fillText(`Enemies killed: ${this.enemiesKilled}`, this.canvasSize.w / 2, this.canvasSize.h / 2 + 100)
+            this.ctx.fillText(`Innocents killed: ${this.innocentsKilled}`, this.canvasSize.w / 2, this.canvasSize.h / 2 + 150)
+            this.ctx.fillText(`Innocents saved: ${this.innocentsSaved}`, this.canvasSize.w / 2, this.canvasSize.h / 2 + 200)
             this.ctx.font = '25px "Press Start 2P"'
-            this.ctx.fillText(`Click to play again!`, this.canvasSize.w / 2, 830)
+            this.ctx.fillText(`Click to play again!`, this.canvasSize.w / 2, this.canvasSize.h / 2 + 280)
             this.ctx.textAlign = 'left'
             this.ctx.fillStyle = 'white'
             this.resetGame()
@@ -293,8 +299,7 @@ const appGame = {
         this.endWaveFrames = 0
         this.waveBanners = []
         this.score = 0
-        this.record = 0
-        this.lives = 5
+        this.lives = this.maxLives
         this.hearts = []
     }
 }
